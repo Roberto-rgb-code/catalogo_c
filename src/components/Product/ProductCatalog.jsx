@@ -35,7 +35,9 @@ const ProductCatalog = () => {
         }));
 
         setProducts(processedProducts);
-        setFilteredProducts(processedProducts);
+        // Filtrar inicialmente solo los productos con existencias
+        const productsWithStock = processedProducts.filter(product => product.stock > 0);
+        setFilteredProducts(productsWithStock);
       } catch (err) {
         console.error('Error in loadData:', err);
         setError(err.message);
@@ -49,11 +51,14 @@ const ProductCatalog = () => {
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
-      setFilteredProducts(products);
+      // Al limpiar la búsqueda, mostrar solo productos con existencias
+      const productsWithStock = products.filter(product => product.stock > 0);
+      setFilteredProducts(productsWithStock);
     } else {
       const filtered = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        product.stock > 0 // Mantener el filtro de existencias en la búsqueda
       );
       setFilteredProducts(filtered);
     }
@@ -65,7 +70,7 @@ const ProductCatalog = () => {
     
     if (filterType === 'categorias') {
       filtered = filtered.filter(product => 
-        product.categorias === value
+        product.categorias === value && product.stock > 0 // Mantener el filtro de existencias
       );
     } else if (filterType === 'existencia') {
       filtered = filtered.filter(product => {
@@ -144,7 +149,6 @@ const ProductCatalog = () => {
             ))}
           </div>
 
-          {/* Botón "Cargar más" */}
           {filteredProducts.length > visibleProducts && (
             <div className="flex justify-center mt-6">
               <button
