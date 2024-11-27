@@ -5,8 +5,8 @@ const Sidebar = ({ onSearch, onFilterChange, products = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openSection, setOpenSection] = useState(null);
 
-  // Obtener categorías únicas
-  const uniqueCategories = [...new Set(products.map(p => p.categorias))].filter(Boolean);
+  // Obtener categorías únicas y ordenarlas alfabéticamente
+  const uniqueCategories = [...new Set(products.map(p => p.categorias))].filter(Boolean).sort();
 
   const handleSubmit = (e) => {
     e.preventDefault();
