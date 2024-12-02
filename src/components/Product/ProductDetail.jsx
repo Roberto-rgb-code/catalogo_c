@@ -19,7 +19,6 @@ const ProductDetail = () => {
     BEIGE: "#f5f5dc",
     naranja: "#ffa500",
     MORADO: "#800080",
-
   };
 
   useEffect(() => {
@@ -38,8 +37,6 @@ const ProductDetail = () => {
 
         const foundProduct = productsData.find((p) => p.skuPadre === id);
 
-        console.log("Producto encontrado:", foundProduct); // Depuración
-
         if (foundProduct) {
           setProduct({
             id: foundProduct.skuPadre,
@@ -57,20 +54,21 @@ const ProductDetail = () => {
                 nombre: hijo.color || "Sin color",
                 stock: stocksMap[hijo.skuHijo] || 0,
                 colorHex:
-                  hijo.colorHex || colorHexMap[hijo.color?.toLowerCase()] || "#ffffff", // Asocia HEX
+                  hijo.colorHex || colorHexMap[hijo.color?.toLowerCase()] || "#ffffff",
               })) || [],
             details: {
               descripcion: foundProduct.descripcion,
               categoria: foundProduct.categorias,
-              tamanoProducto: foundProduct.paquete?.medidas || "1 x 14",
-              tamanoCaja: foundProduct.paquete?.medidas || "",
-              piezasPorCaja: foundProduct.paquete?.PiezasCaja || "",
-              tecnicaImpresion: foundProduct.impresion?.tecnicaImpresion || "",
-              areaImpresion: foundProduct.impresion?.areaImpresion || "",
+              material: foundProduct.material,
+              medidasProducto: foundProduct.medidas,
+              tecnicaImpresion: foundProduct.impresion?.tecnicaImpresion,
+              areaImpresion: foundProduct.impresion?.areaImpresion,
+              pesoBruto: `${foundProduct.paquete.pesoBruto} ${foundProduct.paquete.unidadPeso}`,
+              pesoNeto: `${foundProduct.paquete.pesoNeto} ${foundProduct.paquete.unidadPeso}`,
+              piezasPorCaja: foundProduct.paquete.PiezasCaja,
             },
           });
 
-          // Obtener productos relacionados
           const related = productsData
             .filter(
               (p) =>
@@ -144,7 +142,6 @@ const ProductDetail = () => {
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
 
-          {/* Detalles del producto */}
           <h2 className="font-semibold mt-6 mb-4">Detalles del producto</h2>
           <div className="bg-gray-50 p-6 rounded">
             {Object.entries(product.details).map(([key, value]) => (
@@ -158,48 +155,35 @@ const ProductDetail = () => {
                 <span>{value}</span>
               </div>
             ))}
-
-            {/* Lista de colores y existencias */}
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold">Colores y existencias</h3>
-              <table className="table-auto w-full mt-2 text-left">
-                <thead>
-                  <tr className="border-b">
-                    <th className="p-2">Color</th>
-                    <th className="p-2">Existencia</th>
-                    <th className="p-2 text-center">Etiqueta</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {product.colors.map((color, index) => (
-                    <tr key={index} className="border-b">
-                      {/* Nombre del color */}
-                      <td className="p-2 capitalize">{color.nombre}</td>
-
-                      {/* Existencia */}
-                      <td className="p-2">{color.stock.toLocaleString()}</td>
-
-                      {/* Círculo del color */}
-                      <td className="p-2 text-center">
-                        <div
-                          className="w-6 h-6 rounded-full border border-gray-300 mx-auto"
-                          style={{
-                            backgroundColor: color.colorHex,
-                          }}
-                        ></div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
 
-          {/* Existencia general */}
           <div className="mt-4">
-            <p className="text-sm">
-              Existencia total: {product.stock.toLocaleString()}
-            </p>
+            <h3 className="text-lg font-semibold">Colores y existencias</h3>
+            <table className="table-auto w-full mt-2 text-left">
+              <thead>
+                <tr className="border-b">
+                  <th className="p-2">Color</th>
+                  <th className="p-2">Existencia</th>
+                  <th className="p-2 text-center">Etiqueta</th>
+                </tr>
+              </thead>
+              <tbody>
+                {product.colors.map((color, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="p-2 capitalize">{color.nombre}</td>
+                    <td className="p-2">{color.stock.toLocaleString()}</td>
+                    <td className="p-2 text-center">
+                      <div
+                        className="w-6 h-6 rounded-full border border-gray-300 mx-auto"
+                        style={{
+                          backgroundColor: color.colorHex,
+                        }}
+                      ></div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
